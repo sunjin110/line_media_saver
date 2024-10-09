@@ -4,6 +4,7 @@ plugins {
 
 group = "info.sunjin"
 version = "1.0-SNAPSHOT"
+val lineBotVersion = "9.2.0"
 
 repositories {
     mavenCentral()
@@ -11,6 +12,24 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("com.linecorp.bot:line-bot-messaging-api-client:${lineBotVersion}")
+    implementation("com.linecorp.bot:line-bot-insight-client:${lineBotVersion}")
+    implementation("com.linecorp.bot:line-bot-manage-audience-client:${lineBotVersion}")
+    implementation("com.linecorp.bot:line-bot-module-attach-client:${lineBotVersion}")
+    implementation("com.linecorp.bot:line-bot-module-client:${lineBotVersion}")
+    implementation("com.linecorp.bot:line-bot-shop-client:${lineBotVersion}")
+    implementation("com.linecorp.bot:line-channel-access-token-client:${lineBotVersion}")
+    implementation("com.linecorp.bot:line-liff-client:${lineBotVersion}")
+
+    implementation("com.linecorp.bot:line-bot-webhook:${lineBotVersion}")
+    implementation("com.linecorp.bot:line-bot-parser${lineBotVersion}") // You don't need to depend on this explicitly.
+
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.0")
+
+    // implementation("com.linecorp.bot:line-bot-spring-boot-webmvc:<VERSION>")
+    // implementation("com.linecorp.bot:line-bot-spring-boot-client:<VERSION>") // If you want to write spring-boot API client
+    // implementation("com.linecorp.bot:line-bot-spring-boot-handler:<VERSION>") // You don't need to depend on this explicitly.
+    // implementation("com.linecorp.bot:line-bot-spring-boot-web:<VERSION>") // You don't need to depend on this explicitly.
 }
 
 tasks.register<Jar>("lambda") {
