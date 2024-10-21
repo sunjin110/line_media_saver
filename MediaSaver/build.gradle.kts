@@ -83,7 +83,7 @@ dependencies {
 //    })
 //}
 
-var graalvmArgs: MutableList<String> = mutableListOf();
+val graalvmArgs: MutableList<String> = mutableListOf();
 if (isLinux) {
 //  linuxだけ利用できる
     graalvmArgs.add("--static")
