@@ -23,6 +23,13 @@ dependencies {
 
     testImplementation(kotlin("test"))
 
+    implementation("ch.qos.logback:logback-classic:1.4.6")
+    implementation("io.ktor:ktor-server-core-jvm")
+    implementation("io.ktor:ktor-server-cio-jvm")
+
+    testImplementation("io.ktor:ktor-server-test-host-jvm")
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+
 //    implementation("com.linecorp.bot:line-bot-messaging-api-client:${lineBotVersion}")
 //    implementation("com.linecorp.bot:line-bot-insight-client:${lineBotVersion}")
 //    implementation("com.linecorp.bot:line-bot-manage-audience-client:${lineBotVersion}")
@@ -94,6 +101,9 @@ graalvmNative {
             buildArgs.add("--initialize-at-build-time=ch.qos.logback")
             buildArgs.add("--initialize-at-build-time=io.ktor,kotlin")
             buildArgs.add("--initialize-at-build-time=org.slf4j.LoggerFactory")
+
+            buildArgs.add("--initialize-at-build-time=org.slf4j")
+            buildArgs.add("--initialize-at-build-time=kotlinx")
 
             buildArgs.add("-H:+InstallExitHandlers")
             buildArgs.add("-H:+ReportUnsupportedElementsAtRuntime")

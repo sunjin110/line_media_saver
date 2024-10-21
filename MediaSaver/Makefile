@@ -1,7 +1,7 @@
 WORK_DIR=$(shell pwd)
 
-build/lambda:
-	./gradlew lambda
+build:
+	./gradlew nativeCompile
 
 image/build/lambda:
 	@docker build -t media_saver -f Dockerfile.lambda --platform=linux/amd64 .
