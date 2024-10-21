@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.0.0"
     id("org.graalvm.buildtools.native") version "0.10.3"
+    id("io.ktor.plugin") version "3.0.0"
 }
 
 group = "info.sunjin"
@@ -13,6 +14,7 @@ val isLinux = osName.contains("linux")
 
 repositories {
     mavenCentral()
+    maven(url = uri("https://packages.jetbrains.team/maven/p/ktls/maven"))
 }
 
 dependencies {
@@ -20,6 +22,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     testImplementation(kotlin("test"))
+
 //    implementation("com.linecorp.bot:line-bot-messaging-api-client:${lineBotVersion}")
 //    implementation("com.linecorp.bot:line-bot-insight-client:${lineBotVersion}")
 //    implementation("com.linecorp.bot:line-bot-manage-audience-client:${lineBotVersion}")
@@ -82,15 +85,27 @@ if (isLinux) {
 graalvmNative {
     binaries {
         named("main") {
+            fallback.set(false)
+            verbose.set(true)
+
             mainClass.set("cmd.main.MainKt")
+            buildArgs(graalvmArgs)
+
+            buildArgs.add("--initialize-at-build-time=ch.qos.logback")
+            buildArgs.add("--initialize-at-build-time=io.ktor,kotlin")
+            buildArgs.add("--initialize-at-build-time=org.slf4j.LoggerFactory")
+
+            buildArgs.add("-H:+InstallExitHandlers")
+            buildArgs.add("-H:+ReportUnsupportedElementsAtRuntime")
+            buildArgs.add("-H:+ReportExceptionStackTraces")
+
             imageName.set("main-native")
-            buildArgs(graalvmArgs)
         }
-        named("main") {
-            mainClass.set("cmd.lambda.MainKt")
-            imageName.set("lambda-native")
-            buildArgs(graalvmArgs)
-        }
+//        named("main") {
+//            mainClass.set("cmd.lambda.MainKt")
+//            imageName.set("lambda-native")
+//            buildArgs(graalvmArgs)
+//        }
     }
 }
 
