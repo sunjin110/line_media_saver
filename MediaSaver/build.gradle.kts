@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "2.0.0"
     id("org.graalvm.buildtools.native") version "0.10.3"
     id("io.ktor.plugin") version "3.0.0"
+    kotlin("plugin.serialization").version("2.0.0")
 }
 
 group = "info.sunjin"
@@ -23,9 +24,11 @@ dependencies {
 
     testImplementation(kotlin("test"))
 
-    implementation("ch.qos.logback:logback-classic:1.4.6")
+    implementation("ch.qos.logback:logback-classic:1.4.12")
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-cio-jvm")
+    implementation("io.ktor:ktor-server-content-negotiation")
+    implementation("io.ktor:ktor-serialization-kotlinx-json")
 
     testImplementation("io.ktor:ktor-server-test-host-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
@@ -48,6 +51,21 @@ dependencies {
     // implementation("com.linecorp.bot:line-bot-spring-boot-client:<VERSION>") // If you want to write spring-boot API client
     // implementation("com.linecorp.bot:line-bot-spring-boot-handler:<VERSION>") // You don't need to depend on this explicitly.
     // implementation("com.linecorp.bot:line-bot-spring-boot-web:<VERSION>") // You don't need to depend on this explicitly.
+
+// https://mvnrepository.com/artifact/com.mercateo/ktor-server-lambda-core
+//    implementation("com.mercateo:ktor-server-lambda-core:1.0.1")
+
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("com.amazonaws:aws-lambda-java-core:1.2.1")
+    implementation("com.amazonaws:aws-java-sdk-lambda:1.11.907")
+    implementation("com.linecorp.bot:line-bot-messaging-api-client:8.0.0")
+    implementation("com.linecorp.bot:line-bot-parser:8.0.0")
+    implementation("com.linecorp.bot:line-bot-webhook:8.0.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
+    implementation("com.google.code.gson:gson:2.10.1")
+
+
 }
 
 //tasks.register<Jar>("lambda") {
@@ -67,21 +85,22 @@ dependencies {
 //    })
 //}
 //
-//tasks.register<Jar>("main") {
-//    archiveFileName.set("main.jar")
-//    manifest {
-//        attributes["Main-Class"] = "cmd.main.MainKt"
-//    }
-//    from(sourceSets.main.get().output)
-//
-//    // 依存関係をjarに含める
-//    dependsOn(configurations.runtimeClasspath)
-//    from({
-//        configurations.runtimeClasspath.get()
-//            .filter { it.name.endsWith("jar") }
-//            .map { zipTree(it) }
-//    })
-//}
+tasks.register<Jar>("main") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveFileName.set("main.jar")
+    manifest {
+        attributes["Main-Class"] = "cmd.main.MainKt"
+    }
+    from(sourceSets.main.get().output)
+
+    // 依存関係をjarに含める
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get()
+            .filter { it.name.endsWith("jar") }
+            .map { zipTree(it) }
+    })
+}
 
 val graalvmArgs: MutableList<String> = mutableListOf();
 if (isLinux) {
@@ -111,11 +130,6 @@ graalvmNative {
 
             imageName.set("main-native")
         }
-//        named("main") {
-//            mainClass.set("cmd.lambda.MainKt")
-//            imageName.set("lambda-native")
-//            buildArgs(graalvmArgs)
-//        }
     }
 }
 
