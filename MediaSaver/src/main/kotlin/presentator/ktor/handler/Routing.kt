@@ -8,7 +8,7 @@ import presentator.ktor.dto.SampleRequest
 
 fun Application.configureRouting() {
     routing {
-        get("/") {
+        get("/sample") {
             val req = call.receive<SampleRequest>();
             sampleHandler(req)
             call.respondText("Hello GraalVM!")

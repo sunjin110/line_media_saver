@@ -9,8 +9,7 @@ import kotlinx.serialization.json.Json
 import presentator.ktor.handler.configureRouting
 
 fun main() {
-    println("============= start server")
-    embeddedServer(CIO, port = 8081, host = "0.0.0.0") {
+    embeddedServer(CIO, port = 8081, host = "127.0.0.1") {
         install(ContentNegotiation) {
             json(Json {
                 prettyPrint = true
